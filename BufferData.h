@@ -3,24 +3,30 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/msg.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
 
 #include <semaphore.h>
+#include <pthread.h>
 
-#define BUFFER_SIZE 50
+#include <netdb.h>
+#include <netinet/in.h>
+
 #define EMPTY 0
 #define MAX_PROCESSES 10
+#define BUFFER_SIZE 256
 
-//int mem[BUFFER_SIZE];
+char* act;
 
 struct msgbuf
 {
     long mtype;
-    int item;
+    int item;//[MAX_PROCESSES];
 };
 
 struct BufferData

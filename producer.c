@@ -4,37 +4,28 @@
 //  dataAvailableSem=0
 //  mutexSem=1
 
-static void producer(struct BufferData *sharedBuf, int bufId)
-{
-    int item = 15;
-    struct msgbuf msg;
-    msg.mtype = 1;
-    while (1)
-    {
-        // producer
-        sem_wait(&(sharedBuf->roomAvailableSem)); // 1->0
-        sem_wait(&(sharedBuf->mutexSem));         // 1->0
-        
-        printf("-->Producer\n");
+static void producer(struct BufferData *sharedBuf, int bufId) {
+  int item = 0;
+  struct msgbuf msg;
+  msg.mtype = 1;
+  while (1) {
+    // producer
+    sem_wait(&(sharedBuf->roomAvailableSem)); // 1->0
+    sem_wait(&(sharedBuf->mutexSem));         // 1->0
 
-        //printf("producer: item: %d\n", item);
-        
-        //mem[item] = item;
+    printf("producer: item: %d\n", item);
 
-        
-        //sharedBuf->ID = -1;
-        
-        for(int i=0; i < 5; i++){
-            msg.item = item;
-            int res = msgsnd(bufId, &msg, sizeof(int), 0);
-            /*Qui bisogna aggiungere l'errore!!*/
-            sem_post(&sharedBuf->dataAvailableSem); // 0->N
-            item++;
-        }
-
-        
-        sem_post(&(sharedBuf->actorSem)); // 0->1
-        sleep(1);
-        //sem_post(&(sharedBuf->dataAvailableSem));
+    for (int i = 0; i < MAX_PROCESSES; i++) {
+      msg.item = item;
+      int res = msgsnd(bufId, &msg, sizeof(int), 0);
+      if (res == -1) {
+        perror("error msgsnd");
+      }
+      item++;
+      sem_post(&sharedBuf->dataAvailableSem); // 0->N
     }
+
+    sem_post(&(sharedBuf->actorSem)); // 0->1
+    sleep(1);
+  }
 }

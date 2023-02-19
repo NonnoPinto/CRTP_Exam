@@ -1,11 +1,14 @@
 #include "BufferData.h"
 
-#include "actor.c"
+#include "client.c"
 #include "producer.c"
 #include "consumer.c"
 
 int main(int argc, char *args[])
 {
+
+    act = malloc(BUFFER_SIZE*sizeof(char));
+
     //Initializa shared buffer
     //Special thanks to https://community.hpe.com/t5/hp-ux-general/sem-wait-and-forked-processes/td-p/2783079 for this snippet
     struct BufferData *sharedBuf;
@@ -17,7 +20,7 @@ int main(int argc, char *args[])
     int i, nConsumers;
     pid_t pids[MAX_PROCESSES];
 
-    if (argc < 2)
+    if (argc != 2)
     {
         printf("Cannot have less than 2 consumers\n");
         exit(0);
