@@ -8,6 +8,7 @@ static void producer(struct BufferData *sharedBuf, int bufId) {
   int item = 0;
   struct msgbuf msg;
   msg.mtype = 1;
+  
   while (1) {
     // producer
     sem_wait(&(sharedBuf->roomAvailableSem)); // 1->0
@@ -15,6 +16,7 @@ static void producer(struct BufferData *sharedBuf, int bufId) {
 
     printf("producer: item: %d\n", item);
 
+    //every time inserting enough items for every consumer to use on average one of them
     for (int i = 0; i < MAX_PROCESSES; i++) {
       msg.item = item;
       int res = msgsnd(bufId, &msg, sizeof(int), 0);

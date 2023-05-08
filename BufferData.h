@@ -29,6 +29,7 @@ struct msgbuf
     int item;//[MAX_PROCESSES];
 };
 
+/* Buffer of semaphores */
 struct BufferData
 {
     // int readIdx;
@@ -41,12 +42,14 @@ struct BufferData
     sem_t actorSem;
 };
 
+
+/* Helper function using during developement to know semaphores status */
 void getValues(struct BufferData buf){
     int m, d, r, a;
-    sem_getvalue(&buf.mutexSem, &m);
-    sem_getvalue(&buf.dataAvailableSem, &d);
-    sem_getvalue(&buf.roomAvailableSem, &r);
-    sem_getvalue(&buf.actorSem, &a);
+    sem_getvalue(&buf.mutexSem, &m);            //only released by actor
+    sem_getvalue(&buf.dataAvailableSem, &d);    //released by consumer after using items
+    sem_getvalue(&buf.roomAvailableSem, &r);    //released after first items are created
+    sem_getvalue(&buf.actorSem, &a);            //relased by producer or consumer
 
     printf("mutex: %d\ndata: %d\nroom: %d\nactor: %d\n\n", m, d, r, a);
 }

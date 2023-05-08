@@ -38,6 +38,7 @@ int main(int argc, char *args[])
         exit(0);
     }
 
+    //Semaphores init
     sem_init(&sharedBuf->mutexSem, 1, 1);
     sem_init(&sharedBuf->dataAvailableSem, 1, 0);
     sem_init(&sharedBuf->roomAvailableSem, 1, 1);
@@ -73,7 +74,7 @@ int main(int argc, char *args[])
             printf("Distrutto figlio %d\n", i);
         }
     }
-    /* Wait process termination */
+    /* Wait process termination, mostly will not be reached */
     for (i = 0; i <= nConsumers; i++)
     {
         waitpid(pids[i], NULL, 0);

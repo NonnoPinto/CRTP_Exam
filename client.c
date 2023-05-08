@@ -1,3 +1,5 @@
+/* CRTP lab client */
+
 #pragma once
 
 #include "BufferData.h"
@@ -44,12 +46,13 @@ static void actor(struct BufferData *sharedBuf, int bufId, int nConsumers) {
     exit(1);
   }
   
-  //ACTOR
+  /* ACTOR -> every time someone do anything at msgbuf, sends to server what happened */
   int item, ID;
   struct msqid_ds info;
   bool fullArr = false;
 
   int users[nConsumers + 1];
+  //users id in array (to check number and id are always same couple)
   for (int k = 0; k < nConsumers + 1; k++)
     users[k] = -1;
 
